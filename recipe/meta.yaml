@@ -1,4 +1,4 @@
-{% set version = "0.5.6" %}
+{% set version = "0.7.3" %}
 
 package:
   name: pystow
@@ -6,12 +6,12 @@ package:
 
 source:
   url: https://pypi.org/packages/source/p/pystow/pystow-{{ version }}.tar.gz
-  sha256: db567e82a5b7aea34cdcf4ae00ba822cd64a51ae2f465b1995599676e4cdbff2
+  sha256: cace7b855a0bb54ebd9badf92f48bd02abff5202a0db80c16b1082337afdb2c9
 
 build:
   noarch: python
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  number: 1
+  number: 0
 
 requirements:
   host:
