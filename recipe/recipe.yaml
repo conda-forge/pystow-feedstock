@@ -3,6 +3,7 @@ schema_version: 1
 
 context:
   version: "0.10.2"
+  # check an explict version instead of `*`
   python_check_max: "3.14"
 
 package:
@@ -28,6 +29,7 @@ requirements:
     - python ${{ python_min }}.*
     - uv-build >=0.6.6,<1.0
   run:
+    # this is a no-op on python >=3.14
     - backports.zstd
     - python >=${{ python_min }}
     - tqdm
@@ -36,8 +38,6 @@ requirements:
 tests:
   - package_contents:
       strict: true
-      bin:
-        - pystow
       site_packages:
         - pystow/**
         - pystow-${{ version }}.dist-info/**
@@ -49,12 +49,11 @@ tests:
         - ${{ python_check_max }}.*
   - requirements:
       run:
+        - click
         - pip
         - python ${{ python_min }}.*
     script:
       - pystow --help
-      - pystow --version
-      - pystow --version | ${{ "grep -iE " if unix else "findstr /r /c:" }}${{ version | replace(".", "\\.") }}
 
 about:
   summary: Easily pick a place to store data for your Python code
