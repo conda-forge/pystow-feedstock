@@ -1,47 +1,66 @@
-{% set version = "0.5.6" %}
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+schema_version: 1
+
+context:
+  version: "0.10.2"
 
 package:
   name: pystow
-  version: {{ version }}
+  version: ${{ version }}
 
 source:
-  url: https://pypi.org/packages/source/p/pystow/pystow-{{ version }}.tar.gz
-  sha256: db567e82a5b7aea34cdcf4ae00ba822cd64a51ae2f465b1995599676e4cdbff2
+  url: https://files.pythonhosted.org/packages/source/p/pystow/pystow-${{ version }}.tar.gz
+  sha256: e30ff664a9099ab9356b25e4fa3c69a1612a32c2c5b81e8a23b4c8efc2fb8a6d
 
 build:
-  noarch: python
-  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  number: 1
+  number: 0
+  python:
+    entry_points:
+      - pystow = pystow.cli:main
+  script:
+    - ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation --check-build-dependencies
 
 requirements:
   host:
-    - python {{ python_min }}.*
     - pip
-    - setuptools
+    - python >=3.11
+    - uv-build >=0.6.6,<1.0
   run:
-    - python >={{ python_min }}
-    - click
-    - requests
+    - backports.zstd
+    - python >=${{ python_min }}
     - tqdm
+    - typing_extensions
 
-test:
-  requires:
-    - python {{ python_min }}.*
-    - pip
-  imports:
-    - pystow
-  commands:
-    - pip check
+tests:
+  - package_contents:
+      strict: true
+      site_packages:
+        - pystow/**
+        - pystow-${{ version }}.dist-info/**
+  - python:
+      imports: pystow
+      pip_check: true
+      python_version:
+        - ${{ python_min }}.*
+        - ${{ python_check_max }}.*
+  - requirements:
+      run:
+        - pip
+        - python ${{ python_min }}.*
+    script:
+      - pystow --help
+      - pystow --version
+      - pystow --version | ${{ "grep -iE " if unix else "findstr /r /c:" }}${{ version | replace(".", "\\.") }}
 
 about:
-  home: https://github.com/cthoyt/pystow
-  summary: Easily pick a place to store data for your python package.
+  summary: Easily pick a place to store data for your Python code
   license: MIT
-  license_file:
-    - LICENSE
-  doc_url: https://pystow.readthedocs.io/en/latest/
-  dev_url: https://github.com/cthoyt/pystow
+  license_file: LICENSE
+  homepage: https://pypi.org/project/pystow
+  repository: https://github.com/cthoyt/pystow
+  documentation: https://pystow.readthedocs.io
 
 extra:
   recipe-maintainers:
     - cthoyt
+    - bollwyvl
