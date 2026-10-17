@@ -2,7 +2,7 @@
 schema_version: 1
 
 context:
-  version: "0.10.2"
+  version: "0.10.3"
   # check an explict version instead of `*`
   python_check_max: "3.14"
 
@@ -12,7 +12,7 @@ package:
 
 source:
   url: https://files.pythonhosted.org/packages/source/p/pystow/pystow-${{ version }}.tar.gz
-  sha256: e30ff664a9099ab9356b25e4fa3c69a1612a32c2c5b81e8a23b4c8efc2fb8a6d
+  sha256: 09276e0eeff99069eec1cc6ca24a0e90e4202981d98b2783c2a7c7bb323f8817
 
 build:
   number: 0
